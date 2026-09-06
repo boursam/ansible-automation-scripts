@@ -1,0 +1,127 @@
+---
+- name: Installation and Configuration of Docker on Ubuntu
+  hosts: all
+  become: true
+
+  vars:
+    docker_data_dir_new: /data/docker
+    docker_data_dir_old: /var/lib/docker
+
+  tasks:
+    - name: Updating APT cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Installing pre-requisite packages
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - rsync
+        state: present
+
+    - name: Verifying /etc/apt/keyrings exists
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Downloading Docker GPG key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+        force: false
+
+    - name: Add Docker APT repository
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
+          https://download.docker.com/linux/ubuntu
+          {{ ansible_distribution_release }} stable
+        state: present
+        filename: docker
+
+    - name: Installing Docker Engine packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+          - docker-buildx-plugin
+        state: present
+        update_cache: true
+
+    - name: Verifying /etc/docker directory exists
+      ansible.builtin.file:
+        path: /etc/docker
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Deploying daemon.json
+      ansible.builtin.template:
+        src: daemon.json.j2
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart Docker
+
+    - name: Creating new data directory for Docker
+      ansible.builtin.file:
+        path: "{{ docker_data_dir_new }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0711'
+
+    - name: Checking original Docker data directory existence
+      ansible.builtin.stat:
+        path: "{{ docker_data_dir_old }}"
+      register: docker_old_dir
+
+    - name: Migrate Docker data with rsync
+      ansible.builtin.command: >
+        rsync -aP {{ docker_data_dir_old }}/ {{ docker_data_dir_new }}/
+      when:
+        - docker_old_dir.stat.exists
+        - docker_old_dir.stat.isdir
+      args:
+        creates: "{{ docker_data_dir_new }}/overlay2"
+      register: rsync_result
+
+    - name: Rename old Docker directory as backup
+      ansible.builtin.command: >
+        mv {{ docker_data_dir_old }} {{ docker_data_dir_old }}.backup
+      when:
+        - docker_old_dir.stat.exists
+        - rsync_result is not skipped
+        - rsync_result is succeeded
+
+    - name: Enable and start Docker service
+      ansible.builtin.systemd:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Collect Docker information
+      ansible.builtin.command: docker info
+      register: docker_info
+      changed_when: false
+
+    - name: Show Docker root directory
+      ansible.builtin.debug:
+        msg: "{{ docker_info.stdout_lines | select('search', 'Docker Root Dir') | list }}"
+
+  handlers:
+    - name: Restart Docker
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
