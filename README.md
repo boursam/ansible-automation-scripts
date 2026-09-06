@@ -92,9 +92,9 @@ ansible-playbook -i inventory.ini install.yml
 ```
 
 ## Run
-\`\`\`bash
+```bash
 ansible-playbook -i inventory.ini install.yml
-\`\`\`
+```
 
 ---
 ## Notes on Secrets & Inventories
