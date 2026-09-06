@@ -1,0 +1,6 @@
+[ubuntu]
+ubuntu-srv-t01 ansible_host=10.0.2.35
+
+[ubuntu:vars]
+ansible_user=tester
+ansible_become=true
