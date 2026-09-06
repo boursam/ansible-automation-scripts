@@ -1,0 +1,81 @@
+---
+- name: Disk Partitionning and Data Mount
+  hosts: all
+  become: true
+
+  vars:
+    disk_device: /dev/sdb
+    partition_number: 1
+    vg_name: data-vg
+    lv_name: data-lv
+    mount_point: /data
+    fs_type: ext4
+
+  tasks:
+    - name: Install LVM2 package
+      apt:
+        name: lvm2
+        state: present
+        update_cache: yes
+
+    # sudo fdisk /dev/sdb
+    - name: Create GPT partition on disk
+      parted:
+        device: "{{ disk_device }}"
+        number: "{{ partition_number }}"
+        state: present
+        part_start: 1MiB
+        part_end: 100%
+        label: GPT
+      register: partition_result
+
+    # vgcreate /dev/sdb1
+    - name: Creation of physical volume
+      lvg:
+        vg: "{{ vg_name }}"
+        pvs: "{{ disk_device }}{{ partition_number }}"
+        state: present
+
+    # lvcreate datavg
+    - name: Creation of Logical Volume
+      lvol:
+        vg: "{{ vg_name }}"
+        lv: "{{ lv_name }}"
+        size: 100%FREE
+        state: present
+
+    # mkfs.ext4 /dev/data-vg/data-lv
+    - name: Creation of ext4 filesystem
+      filesystem:
+        fstype: "{{ fs_type }}"
+        dev: "/dev/{{ vg_name }}/{{ lv_name }}"
+
+    # mkdir -p /data
+    - name: Creation of mount point directory
+      file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: '0755'
+
+    - name: Get filesystem UUID for the LV
+      ansible.builtin.command: blkid -s UUID -o value /dev/{{ vg_name }}/{{ lv_name }}
+      register: lv_uuid
+      changed_when: false
+
+    - name: Mount filesystem by UUID
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        src: "UUID={{ lv_uuid.stdout }}"
+        fstype: "{{ fs_type }}"
+        opts: defaults,nofail
+        state: mounted
+
+    # df -h
+    - name: Show Disk Usage
+      command: df -h
+      register: disk_output
+      changed_when: false
+
+    - name: Display disk usage
+      ansible.builtin.debug:
+        var: disk_output.stdout_lines
