@@ -50,7 +50,7 @@ ansible-playbook -i inventory.ini install.yml
   ansible-galaxy collection install ansible.posix
   ```
 - A raw, unpartitioned (or reusable) block device available on the target (default: `/dev/sdb`)
-- `become: true` — requires sudo/root privileges on the target
+- `sudo`/`root` privileges on the target
 
 ---
 
