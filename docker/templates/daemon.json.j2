@@ -1,0 +1,22 @@
+{
+    "storage-driver": "overlay2",
+    "data-root": "/data/docker",
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3",
+        "compress": "true"
+    },
+    "live-restore": true,
+    "no-new-privileges": true,
+    "default-ulimits": {
+        "nofile": {
+            "Name": "nofile",
+            "Hard": 65535,
+            "Soft": 65535
+        }
+    },
+    "insecure-registries": [
+        "registry.company.local:5000"
+    ]
+}
