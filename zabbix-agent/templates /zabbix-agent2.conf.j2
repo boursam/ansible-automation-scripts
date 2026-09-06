@@ -1,0 +1,19 @@
+PidFile=/run/zabbix/zabbix_agent2.pid
+LogFile=/var/log/zabbix/zabbix_agent2.log
+
+Server={{ zabbix_server_ip }}
+ServerActive={{ zabbix_server_ip }}
+
+ListenPort=10050
+ListenIP={{ ansible_default_ipv4.address }}
+
+Hostname={{ ansible_hostname }}
+
+Include=/etc/zabbix/zabbix_agent2.d/*.conf
+ControlSocket=/tmp/agent.sock
+
+# For Auto-discovery on zabbix
+# HostMetadata=Linux
+
+# For docker containers monitoring
+# Plugins.Docker.Endpoint=unix:///var/run/docker.sock
