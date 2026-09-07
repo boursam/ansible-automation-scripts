@@ -37,6 +37,8 @@ ansible-homelab/
 │   └── readme.md
 │
 ├── zabbix-agent/
+    ├── templates/
+    │   └── zabbix-agent2.conf.j2
     ├── install.yml
     ├── inventory.ini
     └── readme.md
