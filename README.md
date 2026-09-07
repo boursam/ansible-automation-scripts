@@ -1,4 +1,4 @@
-# #U+2699 ansible-automation-scripts
+# ansible-automation-scripts
 
 This repository represent a collection of independant Ansible automations for provisioning and configuration, including system setup, storage, containers, orchestration, and monitoring.
 
