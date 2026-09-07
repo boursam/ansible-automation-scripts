@@ -25,7 +25,7 @@ ansible-homelab/
 ├── ansible.cfg
 |
 ├── data-partitioning/
-│   ├── install.yml
+│   ├── config.yml
 │   ├── inventory.ini
 │   └── readme.md
 │
@@ -39,7 +39,7 @@ ansible-homelab/
 ├── zabbix-agent/
     ├── templates/
     │   └── zabbix-agent2.conf.j2
-    ├── install.yml
+    ├── install-agent.yml
     ├── inventory.ini
     └── readme.md
 ```
