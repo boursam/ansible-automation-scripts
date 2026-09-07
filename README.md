@@ -23,12 +23,7 @@ ansible-homelab/
 ├── LICENSE
 ├── .gitignore
 ├── ansible.cfg
-│
-├── linux-baseline/
-│   ├── install.yml
-│   ├── inventory.ini
-│   └── readme.md
-│
+|
 ├── data-partitioning/
 │   ├── install.yml
 │   ├── inventory.ini
@@ -38,23 +33,6 @@ ansible-homelab/
 │   ├── templates/
 │   │   └── daemon.json.j2
 │   ├── install-docker.yml
-│   ├── inventory.ini
-│   └── readme.md
-│
-├── docker-swarm/
-│   ├── templates/
-│   │   └── daemon.json.j2
-│   ├── install-swarm.yml
-│   ├── inventory.ini
-│   └── readme.md
-│
-├── linstor/
-│   ├── install.yml
-│   ├── inventory.ini
-│   └── readme.md
-│
-├── packages-upgrade/
-│   ├── install.yml
 │   ├── inventory.ini
 │   └── readme.md
 │
@@ -77,18 +55,9 @@ ansible-homelab/
 ## Usage
 
 Each automation is run idependently from its own folder:
-```bash
-cd docker
-ansible-playbook -i inventory.ini install-docker.yml
-```
 
 ```bash
 cd zabbix-agent
-ansible-playbook -i inventory.ini install.yml
-```
-
-## Run
-```bash
 ansible-playbook -i inventory.ini install.yml
 ```
 
