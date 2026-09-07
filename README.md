@@ -9,12 +9,8 @@ Each folder is a **self-contained automation**: its own playbook, inventory file
 
 | Folder | Purpose |
 |---|---|
-| [linux-baseline](./linux-baseline) | Base Linux system configuration | 
 | [data-partitioning](./data-partitioning) | Disk partitioning setup | 
 | [docker](./docker) | Docker install & configuration | 
-| [docker-swarm](./docker-swarm) | Docker Swarm setup | 
-| [linstor](./linstor) | LINSTOR storage setup | 
-| [packages-upgrade](./packages-upgrade) | System package upgrades | 
 | [zabbix-agent](./zabbix-agent) | Zabbix agent install & configuration |
 
 > Each subfolder has its own `readme.md` with specific run instructions, variables, and notes.
