@@ -9,7 +9,7 @@ Each folder is a **self-contained automation**: its own playbook, inventory file
 
 | Folder | Purpose |
 |---|---|
-| [data-partitioning](./data-partitioning) | Disk partitioning setup | 
+| [data-partitioning](./data-partitionning) | Disk partitioning setup | 
 | [docker](./docker) | Docker install & configuration | 
 | [zabbix-agent](./zabbix-agent) | Zabbix agent install & configuration |
 
