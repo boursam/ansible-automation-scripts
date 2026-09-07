@@ -46,7 +46,7 @@ ansible-homelab/
 ---
 
 ## Pre-requisites
--   Ansibled installed/
+-   Ansible installed
 -   SSH access configured to target hosts
 -   Target hosts running a supported Linux distribution
 -   `sudo` privilege escalation configured for the ansible user on targets
