@@ -9,7 +9,7 @@
     vg_name: data-vg
     lv_name: data-lv
     mount_point: /data
-    fs_type: ext4
+    fs_type: xfs
 
   tasks:
     - name: Install LVM2 package
@@ -44,7 +44,7 @@
         size: 100%FREE
         state: present
 
-    # mkfs.ext4 /dev/data-vg/data-lv
+    # Formatting : mkfs.xfs /dev/data-vg/data-lv
     - name: Creation of ext4 filesystem
       filesystem:
         fstype: "{{ fs_type }}"
