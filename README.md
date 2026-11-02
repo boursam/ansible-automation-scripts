@@ -1,72 +1,86 @@
-# ansible-automation-scripts
+# Ansible Automation Scripts
 
-This repository represent a collection of independant Ansible automations for provisioning and configuration, including system setup, storage, containers, orchestration, and monitoring.
+A collection of independent Ansible playbooks for automating Linux infrastructure provisioning and configuration.
 
-Each folder is a **self-contained automation**: its own playbook, inventory file, and README, run them independantly depending on what you need to provision.
+Each automation is self-contained, with its own playbook, inventory, templates (where required) and documentation. Automations can be executed independently depending on the configuration task.
 
----
-## Contents
+## Automations
 
-| Folder | Purpose |
+| Directory | Description |
 |---|---|
-| [data-partitioning](./data-patitionning) | Disk partitioning setup | 
-| [docker](./docker) | Docker install & configuration | 
-| [zabbix-agent](./zabbix-agent) | Zabbix agent install & configuration |
+| [`data-partitioning/`](./data-partitioning/) | Automated disk partitioning and storage configuration |
+| [`docker/`](./docker/) | Docker installation and daemon configuration |
+| [`zabbix-agent/`](./zabbix-agent/) | Zabbix Agent 2 installation and configuration |
 
-> Each subfolder has its own `readme.md` with specific run instructions, variables, and notes.
----
+Each directory contains a README with its specific requirements, variables and execution instructions.
 
 ## Repository Structure
-```
-ansible-homelab/
+
+```text
+ansible-automation-scripts/
 ├── README.md
 ├── LICENSE
 ├── .gitignore
 ├── ansible.cfg
-|
+│
 ├── data-partitioning/
 │   ├── config.yml
 │   ├── inventory.ini
-│   └── readme.md
+│   └── README.md
 │
 ├── docker/
 │   ├── templates/
 │   │   └── daemon.json.j2
 │   ├── install-docker.yml
 │   ├── inventory.ini
-│   └── readme.md
+│   └── README.md
 │
-├── zabbix-agent/
+└── zabbix-agent/
     ├── templates/
     │   └── zabbix-agent2.conf.j2
     ├── install-agent.yml
     ├── inventory.ini
-    └── readme.md
+    └── README.md
 ```
----
 
-## Pre-requisites
--   Ansible installed
--   SSH access configured to target hosts
--   Target hosts running a supported Linux distribution
--   `sudo` privilege escalation configured for the ansible user on targets
--   Debian/Ubuntu Distributions target
+## Prerequisites
 
----
+- Ansible installed on the control node.
+- SSH connectivity to target hosts.
+- Debian/Ubuntu-based target systems.
+- A user with appropriate `sudo` privileges on target hosts.
+- Inventory files configured with the target hosts and connection parameters.
 
 ## Usage
 
-Each automation is run idependently from its own folder:
+Navigate to the desired automation directory and execute its playbook.
 
+**Docker installation**
 ```bash
-cd zabbix-agent
-ansible-playbook -i inventory.ini install.yml
+cd docker
+ansible-playbook -i inventory.ini install-docker.yml
 ```
 
----
-## Notes on Secrets & Inventories
+**Zabbix Agent 2 installation**
+```bash
+cd zabbix-agent
+ansible-playbook -i inventory.ini install-agent.yml
+```
 
-- `inventory.ini` files in this repo use **placeholder/example hosts** — replace with your own IPs/hostnames before running.
-- No real credentials, SSH keys, or vault passwords are committed.
+**Disk partitioning**
+```bash
+cd data-partitioning
+ansible-playbook -i inventory.ini config.yml
+```
 
----
+For execution details and required variables, refer to the README inside each automation directory.
+
+## Inventory and Credentials
+
+- Inventory files contain example or placeholder hosts. Replace them with your target systems before execution.
+- Do not commit production credentials, private SSH keys or Ansible Vault passwords.
+- Use Ansible Vault or another secrets-management solution for sensitive variables.
+
+## Notes
+
+These playbooks are maintained as independent automations rather than a single end-to-end provisioning workflow.
