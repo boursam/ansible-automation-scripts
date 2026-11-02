@@ -13,7 +13,7 @@ This playbook takes a raw block device, partitions it, builds a physical volume 
 3. Creates a physical volume (PV) on that partition
 4. Creates a volume group (VG) from the PV
 5. Creates a logical volume (LV) using 100% of the available space
-6. Formats the LV with an `ext4` filesystem
+6. Formats the LV with an `xfs` filesystem
 7. Creates the mount point directory
 8. Retrieves the filesystem UUID
 9. Mounts the LV persistently via `/etc/fstab` (by UUID, with `nofail`)
